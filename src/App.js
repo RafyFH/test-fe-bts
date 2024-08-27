@@ -1,24 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import ChecklistPage from './pages/ChecklistPage';
+// import RegisterPage from './pages/RegisterPage';
+// import DashboardPage from './pages/DashboardPage';
 
+
+const PrivateRoute = ({ element: Component }) => {
+  const user = JSON.parse(localStorage.getItem('user'));
+
+  // Jika ada user dan token, izinkan akses ke halaman yang dilindungi
+  return user && user.token ? <Component /> : <Navigate to="/login" />;
+};
 function App() {
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/checklist" element={<PrivateRoute element={ChecklistPage} />} />
+        {/* <Route path="/dashboard" element={<DashboardPage />} /> */}
+      </Routes>
+    </Router>
   );
 }
 
